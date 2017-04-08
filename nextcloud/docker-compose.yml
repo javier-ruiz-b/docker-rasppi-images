@@ -9,6 +9,12 @@ services:
           - "80:80"
           - "443:443"
         volumes:
-          - ./config:/var/www/nextcloud/config:rw
-          - ./db:/var/lib/mysql:rw
-          - ./data:/var/www/nextcloud/data:rw
+          - ./letsencrypt:/etc/letsencrypt
+          - nextcloud-config:/var/www/nextcloud/config:rw
+          - mariadb-data:/var/lib/mysql:rw
+          - nextcloud-data:/var/www/nextcloud/data:rw
+
+volumes:
+  mariadb-data:
+  nextcloud-data:
+  nextcloud-config:
