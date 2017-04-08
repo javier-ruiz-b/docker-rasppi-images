@@ -1,7 +1,8 @@
 FROM debian:jessie
 #FROM resin/rpi-raspbian:jessie
 
-ENV DBPASS=QGbueFDNHL7DRmLr
+ARG DBPASS
+ENV DBPASS=$DBPASS
 RUN export DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends debconf-utils \
