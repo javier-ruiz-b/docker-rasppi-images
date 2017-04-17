@@ -25,6 +25,8 @@ RUN apt-get install -t jessie-backports -y --no-install-recommends \
 	nginx \
 	nginx-full
 
+WORKDIR /tmp
+
 # Get nextcloud
 RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/latest-11.tar.bz2 2> /dev/null \
     && wget --no-check-certificate https://download.nextcloud.com/server/releases/latest-11.tar.bz2.sha512 2> /dev/null \
