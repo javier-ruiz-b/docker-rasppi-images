@@ -1,10 +1,12 @@
-#/bin/sh -x
-
-set -e
+#/bin/sh
 
 if [ -z $1 ]; then
 	echo Please write the DB password as argument
+    exit 1
 fi
+
+set -e
+set -x
 
 mkdir -p config data db
 docker build --build-arg DBPASS=$1 . -t nextcloud-nginx
