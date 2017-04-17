@@ -24,20 +24,22 @@ RUN apt-get install -y --no-install-recommends \
 
 WORKDIR /tmp
 
-RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/latest-11.tar.bz2 
-RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/latest-11.tar.bz2.sha512
-RUN shasum -a 512 - < latest-11.tar.bz2.sha512 < latest-11.tar.bz2
-RUN rm latest-11.tar.bz2.sha512
-RUN tar xfj latest-11.tar.bz2 -C /var/www
+# Get nextcloud
+RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/latest-11.tar.bz2 2> /dev/null \
+    && wget --no-check-certificate https://download.nextcloud.com/server/releases/latest-11.tar.bz2.sha512 2> /dev/null \
+    && shasum -a 512 - < latest-11.tar.bz2.sha512 < latest-11.tar.bz2 \
+    && mkdir -p /var/www \
+    && tar xfj latest-11.tar.bz2 -C /var/www \
+    && rm latest-11.tar.bz2*
+
+# Get nginx
+RUN apt-get install -y --no-install-recommends \
+				nginx \
+				nginx-full
 
 COPY install.sh /tmp/
 RUN /bin/bash -x ./install.sh
 COPY entrypoint.sh /tmp/
-
-
-RUN apt-get install -y --no-install-recommends \
-				nginx \
-				nginx-full
 
 EXPOSE 80 443
 
