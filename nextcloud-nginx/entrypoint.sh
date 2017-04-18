@@ -43,4 +43,7 @@ fi
 
 /etc/init.d/mysql start
 
+nginx
+php &
+
 bash

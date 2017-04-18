@@ -10,7 +10,6 @@ set -x
 
 mkdir -p config data db
 docker build --build-arg DBPASS=$1 . -t nextcloud-nginx
-
-ln -s /etc/letsencrypt/live/*/cert.pem /etc/letsencrypt/live/cert.pem
-ln -s /etc/letsencrypt/live/*/privkey.pem /etc/letsencrypt/live/privkey.pem
-docker run -p80:80 -p443:443 -it --rm --name nextcloudnginx nextcloud-nginx
+docker run -p80:80 -p443:443 \
+	-v /etc/letsencrypt:/etc/letsencrypt \
+	-it --rm --name nextcloudnginx nextcloud-nginx
