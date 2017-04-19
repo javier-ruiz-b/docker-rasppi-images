@@ -42,8 +42,7 @@ if [ -f ${ocpath}/data/.htaccess ]
 fi
 
 /etc/init.d/mysql start
-
+/etc/init.d/php-7.1-fpm start
 nginx
-php &
 
 bash

@@ -88,7 +88,7 @@ RUN apt-get update -qq && apt-get install -t jessie-backports -y --no-install-re
     && git checkout PHP-7.1 \
     && chmod +x ./buildconf
 
-RUN cd php-src && ./buildconf && ./configure CFLAGS='-O3' CXXFLAGS='-O3' --prefix=/ --with-zlib-dir --with-freetype-dir --enable-mbstring --with-libxml-dir=/usr --enable-soap --enable-calendar --with-curl --with-mcrypt --with-zlib --with-gd --with-pgsql --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --enable-exif --enable-bcmath --with-mhash --enable-zip --enable-intl --with-pcre-regex --with-mysqli --with-pdo-mysql --with-mysqli --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf --with-openssl --with-fpm-user=www-data --with-fpm-group=www-data --enable-ftp --with-imap --with-imap-ssl --with-kerberos --with-gettext --with-xmlrpc --with-xsl --with-iconv --with-ldap=/usr --with-imap --with-gmp --enable-opcache --enable-ftp --enable-posix --enable-fpm \
+RUN cd php-src && ./buildconf && ./configure CFLAGS='-O2' CXXFLAGS='-O2' --prefix=/ --with-zlib-dir --with-freetype-dir --enable-mbstring --with-libxml-dir=/usr --enable-soap --enable-calendar --with-curl --with-mcrypt --with-zlib --with-gd --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --enable-exif --enable-bcmath --with-mhash --enable-zip --enable-intl --with-pcre-regex --with-mysqli --with-pdo-mysql --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf --with-openssl --with-fpm-user=www-data --with-fpm-group=www-data --enable-ftp --with-imap --with-imap-ssl --with-kerberos --with-gettext --with-xmlrpc --with-xsl --with-iconv --with-ldap=/usr --with-imap --with-gmp --enable-opcache --enable-ftp --enable-posix --enable-fpm \
     && make -j2 \
     && make install \
     && apt-get purge -y \
@@ -129,14 +129,14 @@ RUN cd php-src && ./buildconf && ./configure CFLAGS='-O3' CXXFLAGS='-O3' --prefi
     && echo 'env[TMP] = /tmp' >> /etc/php-fpm.d/www.conf \
     && echo 'env[TMPDIR] = /tmp' >> /etc/php-fpm.d/www.conf \
     && echo 'env[TEMP] = /tmp' >> /etc/php-fpm.d/www.conf \
-    && echo 'env[TEMP] = /tmp' >> /etc/php-fpm.d/www.conf \
     && useradd nginx \
     && mkdir -p /var/lib/php/session \
-    && chown nginx:nginx -R /var/lib/php/session/ \
+    && chown nginx:nginx -R /var/lib/php/session/ \     
     && apt-get autoremove -y
 
 ENV PATH=$PATH:/opt/php-7.1/bin
 
+COPY init.d-php-7.1-fpm /etc/init.d/php-7.1-fpm
 COPY install.sh /tmp/
 RUN /bin/bash -x ./install.sh
 COPY entrypoint.sh /tmp/
@@ -144,8 +144,6 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY nextcloud-nginx.conf /etc/nginx/sites-enabled/nextcloud
 
 EXPOSE 80 443
-
-RUN 
 
 CMD ["/bin/bash", "-x", "/tmp/entrypoint.sh"] 
 #CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"] 
