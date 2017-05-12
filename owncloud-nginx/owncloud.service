@@ -1,0 +1,13 @@
+[Unit]
+Description=Owncloud Docker Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=/bin/sh -c "/usr/bin/docker container stop owncloud && /bin/sleep 1 || /bin/true"
+ExecStart=/usr/bin/docker container start -i owncloud
+ExecStop=/usr/bin/docker container stop owncloud
+
+[Install]
+WantedBy=multi-user.target
