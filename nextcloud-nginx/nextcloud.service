@@ -6,7 +6,7 @@ Requires=docker.service
 [Service]
 Restart=always
 ExecStartPre=/bin/sh -c "/usr/bin/docker container stop nextcloud && /bin/sleep 1 || /bin/true"
-ExecStart=/usr/bin/docker container start nextcloud
+ExecStart=/usr/bin/docker container start -i nextcloud
 ExecStop=/usr/bin/docker container stop nextcloud
 
 [Install]
