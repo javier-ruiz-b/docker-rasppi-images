@@ -1,0 +1,14 @@
+[Unit]
+Description=Nextcloud Docker Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=docker stop nextcloud
+ExecStart=docker run --name nextcloud -v /etc/letsencrypt:/etc/letsencrypt nextcloud-nginx
+ExecStop=docker stop nextcloud
+
+[Install]
+WantedBy=multi-user.target

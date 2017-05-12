@@ -154,4 +154,3 @@ ENV DBPASS=""
 EXPOSE 80 443
 
 CMD ["/bin/bash", "-x", "/tmp/entrypoint.sh"] 
-#CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"] 
