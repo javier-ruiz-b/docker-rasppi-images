@@ -9,7 +9,9 @@ set -e
 set -x
 
 mkdir -p config data db
-docker build --build-arg DBPASS=$1 . -t nextcloud-nginx
-docker run -p80:80 -p443:443 \
+docker image build --build-arg DBPASS=$1 . -t nextcloud-nginx
+docker container run -d -p80:80 -p443:443 \
 	-v /etc/letsencrypt:/etc/letsencrypt \
-	--name nextcloud nextcloud-nginx
+	-v /nextcloud-data:/nextcloud-data \
+	--name nextcloud \
+	nextcloud-nginx

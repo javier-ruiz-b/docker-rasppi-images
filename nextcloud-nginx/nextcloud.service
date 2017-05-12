@@ -4,11 +4,10 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-TimeoutStartSec=0
 Restart=always
-ExecStartPre=docker stop nextcloud
-ExecStart=docker run --name nextcloud -v /etc/letsencrypt:/etc/letsencrypt nextcloud-nginx
-ExecStop=docker stop nextcloud
+ExecStartPre=/bin/sh -c "/usr/bin/docker container stop nextcloud && /bin/sleep 1 || /bin/true"
+ExecStart=/usr/bin/docker container start nextcloud
+ExecStop=/usr/bin/docker container stop nextcloud
 
 [Install]
 WantedBy=multi-user.target
