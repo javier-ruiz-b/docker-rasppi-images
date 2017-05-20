@@ -149,8 +149,7 @@ RUN chmod 755 /etc/init.d/php-7.1-fpm
 COPY owncloud-config.php /var/www/owncloud/config/config.php
 COPY owncloud-nginx.conf /etc/nginx/sites-enabled/owncloud
 RUN rm /etc/nginx/sites-enabled/default
-COPY install.sh /tmp/
-RUN /bin/bash -x ./install.sh $DBPASS
+COPY install.sh /root/
 COPY entrypoint.sh /root/
 RUN rm -rf
 
