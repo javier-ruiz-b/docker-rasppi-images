@@ -8,7 +8,6 @@ sed -i 's/post_max_size.*$/post_max_size = 16G/g' /etc/php/php.ini
 sed -i 's/max_input_time.*$/max_input_time = 3600/g' /etc/php/php.ini 
 sed -i 's/max_execution_time.*$/max_execution_time = 3600/g' /etc/php/php.ini 
 
-
 # ///////////////// owncloud configuration script ///////////////////
 ocpath='/var/www/owncloud'
 htuser='www-data'
@@ -47,5 +46,8 @@ if [ -f ${ocpath}/data/.htaccess ]
   chmod 0644 ${ocpath}/data/.htaccess
   chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
 fi
-#sed -i "20i  \'memcache.local\' => \'\\\OC\\\Memcache\\\APCu\'," config.php
+
+#edit .htaccess file
+#sed -i 's/php_value upload_max_filesize.*$/php_value upload_max_filesize 16G/g' /var/www/owncloud/.htaccess
+#sed -i 's/php_value post_max_size.*$/php_value post_max_size 16G/g' /var/www/owncloud/.htaccess
 
