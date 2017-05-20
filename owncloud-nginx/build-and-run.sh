@@ -9,13 +9,19 @@ set -e
 set -x
 
 docker image build --build-arg DBPASS=$1 . -t owncloud-nginx
-docker volume create owncloud-db
-docker container run -p81:80 -p444:443 \
+if [[ $(docker volume ls -q) != *"owncloud-db"* ]]; then
+    docker volume create owncloud-db 
+    docker container run --rm -p81:80 -p444:443 \
 	-v /etc/letsencrypt:/etc/letsencrypt \
 	-v /nextcloud-data:/nextcloud-data \
-	-v owncloud-db:/var/lib/mysql
-	--name owncloud \
+	-v owncloud-db:/var/lib/mysql \
 	owncloud-nginx \
-	bash -x /root/install.sh $1
+	bash -x /root/createdb.sh $1
+fi
 
-docker container start owncloud
+docker container run -p81:80 -p444:443 \
+        -v /etc/letsencrypt:/etc/letsencrypt \
+        -v /nextcloud-data:/nextcloud-data \
+        -v owncloud-db:/var/lib/mysql \
+        --name owncloud \
+        owncloud-nginx 

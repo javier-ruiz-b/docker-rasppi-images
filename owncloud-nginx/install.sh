@@ -2,11 +2,12 @@
 set -x
 set -e
 
-printf "Initializing DB\n"
-/etc/init.d/mysql start
-mysql -u root -p$DBPASS -e "CREATE DATABASE owncloud;"
-mysql -u root -p$DBPASS -e "GRANT ALL ON owncloud.* to 'owncloud'@'localhost' IDENTIFIED BY '$DBPASS';"
-mysql -u root -p$DBPASS -e "FLUSH PRIVILEGES;"
+# Configuring php
+sed -i 's/upload_max_filesize.*$/upload_max_filesize = 16G/g' /etc/php/php.ini 
+sed -i 's/post_max_size.*$/post_max_size = 16G/g' /etc/php/php.ini 
+sed -i 's/max_input_time.*$/max_input_time = 3600/g' /etc/php/php.ini 
+sed -i 's/max_execution_time.*$/max_execution_time = 3600/g' /etc/php/php.ini 
+
 
 # ///////////////// owncloud configuration script ///////////////////
 ocpath='/var/www/owncloud'

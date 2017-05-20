@@ -149,9 +149,13 @@ RUN chmod 755 /etc/init.d/php-7.1-fpm
 COPY owncloud-config.php /var/www/owncloud/config/config.php
 COPY owncloud-nginx.conf /etc/nginx/sites-enabled/owncloud
 RUN rm /etc/nginx/sites-enabled/default
-COPY install.sh /root/
+COPY install.sh /tmp/
+RUN bash -x /tmp/install.sh
+#COPY owncloud-user.ini /var/www/owncloud/.user.ini
+COPY createdb.sh /root/
 COPY entrypoint.sh /root/
-RUN rm -rf
+RUN rm -rf && \
+    cp -rf /var/lib/mysql /tmp
 
 ENV DBPASS=""
 
