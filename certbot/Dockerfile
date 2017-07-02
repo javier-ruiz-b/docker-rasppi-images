@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:jessie-slim
 #FROM armhf/debian:jessie
 
 #Lets encrypt
