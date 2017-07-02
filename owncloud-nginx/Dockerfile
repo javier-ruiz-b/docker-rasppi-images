@@ -29,12 +29,14 @@ RUN apt-get install -y --no-install-recommends \
 WORKDIR /tmp
 
 # Get owncloud
-RUN wget --no-check-certificate https://download.owncloud.org/community/owncloud-10.0.0.tar.bz2 2> /dev/null \
-    && wget --no-check-certificate https://download.owncloud.org/community/owncloud-10.0.0.tar.bz2.sha256 2> /dev/null \
-    && shasum -a 256 - < owncloud-10.0.0.tar.bz2.sha256 < owncloud-10.0.0.tar.bz2 \
+ENV OWNCLOUD_FILE=owncloud-10.0.2.tar.bz2
+RUN wget --no-check-certificate https://download.owncloud.org/community/${OWNCLOUD_FILE} 2> /dev/null \
+    && wget --no-check-certificate https://download.owncloud.org/community/${OWNCLOUD_FILE}.sha256 2> /dev/null \
+    && shasum -a 256 - < ${OWNCLOUD_FILE}.sha256 < ${OWNCLOUD_FILE} \
     && mkdir -p /var/www \
-    && tar xfj owncloud-10.0.0.tar.bz2 -C /var/www \
-    && rm owncloud-10.0.0.tar.bz2* \
+    && rm -rf /var/www/owncloud* \
+    && tar xfj ${OWNCLOUD_FILE} -C /var/www \
+    && rm ${OWNCLOUD_FILE}* \
     && echo "*/5  *  *  *  * sudo -u www-data php -f /var/www/owncloud/cron.php" | crontab -u www-data -
 
 
