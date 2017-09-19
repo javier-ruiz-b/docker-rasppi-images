@@ -39,7 +39,7 @@ RUN wget --no-check-certificate https://download.owncloud.org/community/${OWNCLO
     && rm ${OWNCLOUD_FILE}* \
     && echo "*/5  *  *  *  * sudo -u www-data php -f /var/www/owncloud/cron.php" | crontab -u www-data -
 
-
+COPY php-apc.ini /tmp/php-apc.ini
 # Compile and install PHP7.1 from source
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     autoconf \
@@ -79,6 +79,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     mlocate \
     zlib1g-dev \
     pkg-config \
+    redis-server \
     re2c \
     && ln -s /usr/include/x86_64-linux-gnu/curl /usr/include/curl \
     && cd /usr/lib \
@@ -100,7 +101,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     && cp php.ini-production /etc/php/php.ini \
     && pecl config-set php_ini /etc/php/php.ini \
     && printf "\n" | pecl install apcu \
-    && echo extension=apcu.so >> /etc/php/php.ini \
+    && printf "\n" | pecl install redis \
+    && cat /tmp/php-apc.ini >> /etc/php/php.ini \
     && apt-get purge -y \
     autoconf \
     bison \
@@ -158,6 +160,12 @@ COPY createdb.sh /root/
 COPY entrypoint.sh /root/
 RUN rm -rf && \
     cp -rf /var/lib/mysql /tmp
+
+RUN mkdir /var/run/redis && \
+    rm /etc/redis/redis.conf && \
+    usermod -a -G redis www-data 
+COPY redis.conf /etc/redis/redis.conf
+RUN chmod 755 /etc/redis/redis.conf
 
 ENV DBPASS=""
 
