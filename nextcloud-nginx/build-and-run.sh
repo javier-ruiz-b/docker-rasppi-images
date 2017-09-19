@@ -7,7 +7,7 @@ fi
 
 set -euo pipefail
 
-docker image build --build-arg DBPASS=$1 . -t owncloud-nginx
+docker image build --build-arg DBPASS=$1 . -t nextcloud-nginx
 if [[ "$(docker volume ls -q)" != *"nextcloud-db"* ]]; then
     docker volume create nextcloud-db
     docker container run --rm -p80:80 -p443:443 \
