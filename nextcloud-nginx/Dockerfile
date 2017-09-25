@@ -40,7 +40,7 @@ RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/$
     && echo "*/5  *  *  *  * sudo -u www-data php -f /var/www/nextcloud/cron.php" | crontab -u www-data -
 
 
-COPY php-apc.ini /tmp/php-apc.ini
+COPY custom-php.ini /tmp/custom-php.ini
 # Compile and install PHP7.1 from source
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     autoconf \
@@ -103,7 +103,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     && pecl config-set php_ini /etc/php/php.ini \
     && printf "\n" | pecl install apcu \
     && printf "\n" | pecl install redis \
-    && cat /tmp/php-apc.ini >> /etc/php/php.ini \
+    && cat /tmp/custom-php.ini >> /etc/php/php.ini \
     && apt-get purge -y \
     autoconf \
     bison \
@@ -147,11 +147,12 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
+ENV PATH=$PATH:/opt/php-7.1/bin
 
 COPY init.d-php-7.1-fpm /etc/init.d/php-7.1-fpm
 RUN chmod 755 /etc/init.d/php-7.1-fpm
 COPY nextcloud-config.php /var/www/nextcloud/config/config.php
-COPY nextcloud-nginx.conf /etc/nginx/sites-enabled/nextcloud
+COPY nginx.conf /etc/nginx/sites-enabled/nextcloud
 RUN rm /etc/nginx/sites-enabled/default
 COPY install.sh /tmp/
 RUN /bin/bash -x ./install.sh
@@ -171,3 +172,4 @@ ENV DBPASS=""
 
 EXPOSE 80 443
 
+CMD ["/bin/bash", "-x", "/root/entrypoint.sh"]

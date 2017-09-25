@@ -9,6 +9,7 @@ set -euo pipefail
 
 docker image build --build-arg DBPASS=$1 . -t nextcloud-nginx
 if [[ "$(docker volume ls -q)" != *"nextcloud-db"* ]]; then
+    echo "Creating DB container"
     docker volume create nextcloud-db
     docker container run --rm -p80:80 -p443:443 \
         -v /etc/letsencrypt:/etc/letsencrypt \
