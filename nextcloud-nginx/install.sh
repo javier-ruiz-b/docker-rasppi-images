@@ -1,12 +1,13 @@
 #!/bin/bash
-set -x
-set -e
+set -euo pipefail
 
 # Configuring php
 sed -i 's/upload_max_filesize.*$/upload_max_filesize = 16G/g' /etc/php/php.ini
 sed -i 's/post_max_size.*$/post_max_size = 16G/g' /etc/php/php.ini
 sed -i 's/max_input_time.*$/max_input_time = 3600/g' /etc/php/php.ini
 sed -i 's/max_execution_time.*$/max_execution_time = 3600/g' /etc/php/php.ini
+
+echo "innodb_flush_log_at_trx_commit = 2" >> /etc/mysql/my.cnf 
 
 # ///////////////// nextcloud configuration script ///////////////////
 ocpath='/var/www/nextcloud'

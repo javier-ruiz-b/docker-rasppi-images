@@ -28,19 +28,6 @@ RUN apt-get install -y --no-install-recommends \
 
 WORKDIR /tmp
 
-# Get nextcloud
-ENV NEXTCLOUD_FILE=latest-12.tar.bz2
-RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/${NEXTCLOUD_FILE} 2> /dev/null \
-    && wget --no-check-certificate https://download.nextcloud.com/server/releases/${NEXTCLOUD_FILE}.sha512 2> /dev/null \
-    && shasum -a 512 - < ${NEXTCLOUD_FILE}.sha512 < ${NEXTCLOUD_FILE} \
-    && mkdir -p /var/www \
-    && rm -rf /var/www/owncloud* \
-    && tar xfj ${NEXTCLOUD_FILE} -C /var/www \
-    && rm ${NEXTCLOUD_FILE}* \
-    && echo "*/5  *  *  *  * sudo -u www-data php -f /var/www/nextcloud/cron.php" | crontab -u www-data -
-
-
-COPY custom-php.ini /tmp/custom-php.ini
 # Compile and install PHP7.1 from source
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     autoconf \
@@ -103,7 +90,6 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     && pecl config-set php_ini /etc/php/php.ini \
     && printf "\n" | pecl install apcu \
     && printf "\n" | pecl install redis \
-    && cat /tmp/custom-php.ini >> /etc/php/php.ini \
     && apt-get purge -y \
     autoconf \
     bison \
@@ -147,6 +133,18 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     && apt-get autoremove -y \
     && apt-get autoclean -y
 
+# Get nextcloud
+ENV NEXTCLOUD_FILE=latest-12.tar.bz2
+RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/${NEXTCLOUD_FILE} 2> /dev/null \
+    && wget --no-check-certificate https://download.nextcloud.com/server/releases/${NEXTCLOUD_FILE}.sha512 2> /dev/null \
+    && shasum -a 512 - < ${NEXTCLOUD_FILE}.sha512 < ${NEXTCLOUD_FILE} \
+    && mkdir -p /var/www \
+    && rm -rf /var/www/owncloud* \
+    && tar xfj ${NEXTCLOUD_FILE} -C /var/www \
+    && rm ${NEXTCLOUD_FILE}* \
+    && echo "*/5  *  *  *  * sudo -u www-data php -f /var/www/nextcloud/cron.php" | crontab -u www-data -
+
+COPY custom-php.ini /etc/php/php.ini
 ENV PATH=$PATH:/opt/php-7.1/bin
 
 COPY init.d-php-7.1-fpm /etc/init.d/php-7.1-fpm
