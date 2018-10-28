@@ -7,8 +7,6 @@ services:
     restart: always
     volumes:
       - db:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=
     env_file:
       - db.env
 
@@ -21,8 +19,11 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
+      - /media/usb-owncloud:/nextcloud-data
     environment:
       - MYSQL_HOST=db
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_DATA_DIR=/nextcloud-data
     env_file:
       - db.env
     depends_on:

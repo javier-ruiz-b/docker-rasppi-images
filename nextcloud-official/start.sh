@@ -5,9 +5,15 @@ if [ "$(whoami)" != "root" ]; then
 	exit 1
 fi
 
-echo MYSQL_PASSWORD=$(cat /etc/password) > db.env
-MYSQL_DATABASE=nextcloud >> db.env
-MYSQL_USER=nextcloud >> db.env
+docker-compose down || true 
+
+cat > db.env <<EOL
+MYSQL_PASSWORD=$(cat /etc/password)
+MYSQL_ROOT_PASSWORD=$(cat /etc/password)
+MYSQL_DATABASE=nextcloud
+MYSQL_USER=nextcloud
+NEXTCLOUD_ADMIN_PASSWORD=$(cat /etc/password)
+EOL
 
 docker-compose build --pull
 docker-compose up -d
