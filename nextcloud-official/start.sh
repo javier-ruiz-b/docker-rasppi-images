@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+set -euo pipefail
+if [ "$(whoami)" != "root" ]; then
+	echo run as root!
+	exit 1
+fi
 
 echo MYSQL_PASSWORD=$(cat /etc/password) > db.env
 MYSQL_DATABASE=nextcloud >> db.env
