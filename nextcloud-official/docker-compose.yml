@@ -21,6 +21,7 @@ services:
       - nextcloud:/var/www/html
       - /media/usb-owncloud:/nextcloud-data
     environment:
+      - VIRTUAL_HOST=localhost
       - MYSQL_HOST=db
       - NEXTCLOUD_ADMIN_USER=admin
       - NEXTCLOUD_DATA_DIR=/nextcloud-data
@@ -81,6 +82,8 @@ services:
       - vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - VIRTUAL_HOST=localhost
     networks:
       - proxy-tier
     depends_on:
