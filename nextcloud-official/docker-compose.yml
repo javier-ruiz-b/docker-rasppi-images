@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: mariadb
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW
     restart: always
     volumes:
       - db:/var/lib/mysql
@@ -19,9 +19,8 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - /media/usb-owncloud:/nextcloud-data
+      - /media/usb-owncloud/owncloud-data:/nextcloud-data
     environment:
-      - VIRTUAL_HOST=localhost
       - MYSQL_HOST=db
       - NEXTCLOUD_ADMIN_USER=admin
       - NEXTCLOUD_DATA_DIR=/nextcloud-data
@@ -37,7 +36,7 @@ services:
     volumes:
       - nextcloud:/var/www/html:ro
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=treso.info
       - LETSENCRYPT_HOST=treso.info
       - LETSENCRYPT_EMAIL=tras3@gmx.net
     depends_on:
@@ -51,6 +50,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
+      - /media/usb-owncloud/owncloud-data:/nextcloud-data
     entrypoint: /cron.sh
     depends_on:
       - db
@@ -69,8 +69,6 @@ services:
       - vhost.d:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    environment:
-      - VIRTUAL_HOST=localhost
     networks:
       - proxy-tier
 
@@ -83,7 +81,7 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=treso.info
     networks:
       - proxy-tier
     depends_on:
