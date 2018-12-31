@@ -134,7 +134,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     && apt-get autoclean -y
 
 # Get nextcloud
-ENV NEXTCLOUD_FILE=latest-12.tar.bz2
+ENV NEXTCLOUD_FILE=latest-13.tar.bz2
 RUN wget --no-check-certificate https://download.nextcloud.com/server/releases/${NEXTCLOUD_FILE} 2> /dev/null \
     && wget --no-check-certificate https://download.nextcloud.com/server/releases/${NEXTCLOUD_FILE}.sha512 2> /dev/null \
     && shasum -a 512 - < ${NEXTCLOUD_FILE}.sha512 < ${NEXTCLOUD_FILE} \

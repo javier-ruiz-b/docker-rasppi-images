@@ -19,7 +19,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - /media/usb-owncloud/owncloud-data:/nextcloud-data
+      - /media/usb-nextcloud/owncloud-data:/nextcloud-data
     environment:
       - MYSQL_HOST=db
       - NEXTCLOUD_ADMIN_USER=admin
@@ -50,7 +50,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - /media/usb-owncloud/owncloud-data:/nextcloud-data
+      - /media/usb-nextcloud/owncloud-data:/nextcloud-data
     entrypoint: /cron.sh
     depends_on:
       - db
