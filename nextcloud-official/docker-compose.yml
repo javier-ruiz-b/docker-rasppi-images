@@ -4,7 +4,7 @@ services:
   db:
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW
-    restart: always
+    restart: on-failure
     volumes:
       - db:/var/lib/mysql
     env_file:
@@ -12,11 +12,11 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
+    restart: on-failure
 
   app:
     build: ./app
-    restart: always
+    restart: on-failure
     volumes:
       - nextcloud:/var/www/html
       - /media/usb-nextcloud/owncloud-data:/nextcloud-data
@@ -32,7 +32,7 @@ services:
 
   web:
     build: ./web
-    restart: always
+    restart: on-failure
     volumes:
       - nextcloud:/var/www/html:ro
     environment:
@@ -47,7 +47,7 @@ services:
 
   cron:
     build: ./app
-    restart: always
+    restart: on-failure
     volumes:
       - nextcloud:/var/www/html
       - /media/usb-nextcloud/owncloud-data:/nextcloud-data
@@ -58,7 +58,7 @@ services:
 
   proxy:
     build: ./proxy
-    restart: always
+    restart: on-failure
     ports:
       - 80:80
       - 443:443
@@ -74,7 +74,7 @@ services:
 
   letsencrypt-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    restart: always
+    restart: on-failure
     volumes:
       - certs:/etc/nginx/certs
       - vhost.d:/etc/nginx/vhost.d
