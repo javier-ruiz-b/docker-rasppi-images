@@ -1,0 +1,3 @@
+[submodule "raspberry-google-home/assistant-sdk-python"]
+	path = raspberry-google-home/assistant-sdk-python
+	url = https://github.com/googlesamples/assistant-sdk-python.git
