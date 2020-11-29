@@ -1,0 +1,11 @@
+[Unit]
+Description=HTTP Server Home
+After=network.target
+Requires=network.target
+
+[Service]
+Restart=always
+ExecStart={pythonfile}
+
+[Install]
+WantedBy=multi-user.target
