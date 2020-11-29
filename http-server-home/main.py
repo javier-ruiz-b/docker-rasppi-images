@@ -11,8 +11,8 @@ api = Flask(__name__)
 def set_relay(device, setValue):
     value = 0
     print(f"pilight-control -d {device} -s {setValue}")
-    for _ in range(3):
-        value = os.system(f"pilight-control -d {device} -s {setValue}")
+    # for _ in range(3):
+    value = os.system(f"pilight-control -d {device} -s {setValue}")
     return "ok"
 
 @api.route('/all-off', methods=['GET'])
