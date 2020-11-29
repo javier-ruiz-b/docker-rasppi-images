@@ -32,10 +32,12 @@ try:
     from . import (
         assistant_helpers,
         browser_helpers,
+        device_helpers,
     )
 except (SystemError, ImportError):
     import assistant_helpers
     import browser_helpers
+    import device_helpers
 
 
 ASSISTANT_API_ENDPOINT = 'embeddedassistant.googleapis.com'
@@ -56,10 +58,11 @@ class SampleTextAssistant(object):
       deadline_sec: gRPC deadline in seconds for Google Assistant API call.
     """
 
-    def __init__(self, language_code, device_model_id, device_id,
+    def __init__(self, language_code, device_model_id, device_id, project_id,
                  display, channel, deadline_sec):
         self.language_code = language_code
         self.device_model_id = device_model_id
+        self.project_id = project_id
         self.device_id = device_id
         self.conversation_state = None
         # Force reset of first conversation.
@@ -130,6 +133,10 @@ class SampleTextAssistant(object):
               default=os.path.join(click.get_app_dir('google-oauthlib-tool'),
                                    'credentials.json'),
               help='Path to read OAuth2 credentials.')
+@click.option('--project-id',
+              metavar='<project id>',
+              help=('Google Developer Project ID used for registration '
+                    'if --device-id is not specified'))
 @click.option('--device-model-id',
               metavar='<device model id>',
               required=True,
@@ -177,7 +184,17 @@ def main(api_endpoint, credentials,
         credentials, http_request, api_endpoint)
     logging.info('Connecting to %s', api_endpoint)
 
-    with SampleTextAssistant(lang, device_model_id, device_id, display,
+    device_handler = device_helpers.DeviceRequestHandler(device_id)
+    @device_handler.command('action.devices.commands.OnOff')
+    def onoff(on):
+        if on:
+            print("Hi")
+            logging.info('Turning device on')
+        else:
+            logging.info('Turning device off')
+
+
+    with SampleTextAssistant(lang, device_model_id, device_id, project_id, display,
                              grpc_channel, grpc_deadline) as assistant:
         while True:
             query = click.prompt('')
