@@ -1,3 +1,4 @@
-/*.img
-/*.zip
+*raspios*.img
+*raspios*.zip
 wpa_supplicant.conf
+cross-compile-output/
