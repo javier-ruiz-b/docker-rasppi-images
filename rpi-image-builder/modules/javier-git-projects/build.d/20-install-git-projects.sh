@@ -30,3 +30,7 @@ cp ledify.service /etc/systemd/system
 
 
 chown -R pi:pi /home/pi
+
+systemctl daemon-reload
+systemctl enable http-server-home.service
+systemctl enable ledify

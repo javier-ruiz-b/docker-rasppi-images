@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+apt-get update -yq 
 apt-get upgrade -yq 
 apt-get install -yq --no-install-recommends \
     borgbackup \
@@ -14,4 +15,5 @@ apt-get install -yq --no-install-recommends \
     python3-pip \
     saidar \
     syncthing \
-    vis
+    vis \
+    watchdog

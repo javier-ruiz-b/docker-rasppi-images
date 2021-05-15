@@ -10,3 +10,5 @@ cd noip*
 
 make
 cp noip2 /usr/local/bin
+
+systemctl enable noip2

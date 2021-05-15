@@ -10,3 +10,6 @@ dpkg -i libmbed*.deb
 apt-get install -yq pilight
 
 cp /etc/pilight/config.json.bak /etc/pilight/config.json
+
+systemctl enable pilight
+systemctl enable pilight-watchdog
