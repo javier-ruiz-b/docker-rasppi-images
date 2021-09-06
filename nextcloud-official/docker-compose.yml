@@ -19,7 +19,8 @@ services:
     restart: on-failure
     volumes:
       - nextcloud:/var/www/html
-      - /media/usb-nextcloud/owncloud-data:/nextcloud-data
+      - /media/usb-nextcloud/nextcloud-data:/nextcloud-data
+      - /media/usb-nextcloud/syncthing:/syncthing
     environment:
       - MYSQL_HOST=db
       - NEXTCLOUD_ADMIN_USER=admin
@@ -29,15 +30,16 @@ services:
     depends_on:
       - db
       - redis
-
+        #    user: "1001:33"
+                
   web:
     build: ./web
     restart: on-failure
     volumes:
       - nextcloud:/var/www/html:ro
     environment:
-      - VIRTUAL_HOST=treso.info
-      - LETSENCRYPT_HOST=treso.info
+      - VIRTUAL_HOST=treso.redirectme.net
+      - LETSENCRYPT_HOST=treso.redirectme.net
       - LETSENCRYPT_EMAIL=tras3@gmx.net
     depends_on:
       - app
@@ -50,7 +52,7 @@ services:
     restart: on-failure
     volumes:
       - nextcloud:/var/www/html
-      - /media/usb-nextcloud/owncloud-data:/nextcloud-data
+      - /media/usb-nextcloud/nextcloud-data:/nextcloud-data
     entrypoint: /cron.sh
     depends_on:
       - db
@@ -81,7 +83,7 @@ services:
       - html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - VIRTUAL_HOST=treso.info
+      - VIRTUAL_HOST=treso.redirectme.net
     networks:
       - proxy-tier
     depends_on:
